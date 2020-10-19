@@ -7,7 +7,7 @@
 :: Run your process with full traceability.
 :: Its execution with event view, text logs and slack notifications
 ::--------------------------------------------------------------------------------
-setlocal
+setlocal EnableDelayedExpansion
 
 :: set variable environment
 set application_label=%1
@@ -82,6 +82,7 @@ goto :eof
 call :timef
 call :datef
 
+set startTime=%time: =0%
 set start_time=%datef% %timef%
 set aut_start_time=%date% %time%
 set error_file=%logdir%\%application%-ERROR-%datef%-%timef%.log
@@ -94,9 +95,11 @@ set /p errormessage= < %error_file%
 	
 call :timef
 call :datef
+set endTime=%time: =0%
 set end_time=%datef% %timef%
 set aut_end_time=%date% %time%
 
+call :Elapsed
 call :logger
 goto :eof
 
@@ -121,14 +124,27 @@ if %error% NEQ 0 (
 
 set log_file=%logdir%\%application%-%datef%.log
 
-set log_line=%start_time% %end_time% %status% %error% %application% %application_label% "%args%" "%errormessage%"
+set log_line=%start_time% %end_time% %Elapsed% %status% %error% %application% %application_label% "%args%" "%errormessage%"
 
 echo %log_line%
 echo %log_line%>>%log_file%
 
-set message=%message% *_%application%_* start:`%aut_start_time%` end:`%aut_end_time%` *%COMPUTERNAME%* `%args:\=\\%` `%error%` _%errormessage%_
+set message=%message% *_%application%_* start:`%aut_start_time%` end:`%aut_end_time%` elapsed:`%Elapsed%` *%COMPUTERNAME%* `%args:\=\\%` `%error%` _%errormessage%_
 
 goto :post_slack
+goto :eof
+
+:: Elapsed
+:Elapsed
+
+rem Get elapsed time:
+set "end=!endTime:%time:~8,1%=%%100)*100+1!"  &  set "start=!startTime:%time:~8,1%=%%100)*100+1!"
+set /A "elap=((((10!end:%time:~2,1%=%%100)*60+1!%%100)-((((10!start:%time:~2,1%=%%100)*60+1!%%100), elap-=(elap>>31)*24*60*60*100"
+
+rem Convert elapsed time to HH:MM:SS:CC format:
+set /A "cc=elap%%100+100,elap/=100,ss=elap%%60+100,elap/=60,mm=elap%%60+100,hh=elap/60+100"
+
+set Elapsed=%hh:~1%%time:~2,1%%mm:~1%%time:~2,1%%ss:~1%%time:~8,1%%cc:~1%
 goto :eof
 
 :: sent to slack
