@@ -37,3 +37,11 @@ To sent slack message you need:
     :: - otification channel
     SET SLACK_CHANNEL=#sandbox
     ```
+
+## slack alert sample
+
+![slack](./img/slack-alert.png)
+
+## task scheduler config sample
+
+![task scheduler](./img/TaskScheduler.png)
