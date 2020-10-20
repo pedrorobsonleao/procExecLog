@@ -124,12 +124,12 @@ if %error% NEQ 0 (
 
 set log_file=%logdir%\%application%-%datef%.log
 
-set log_line=%start_time% %end_time% %Elapsed% %status% %error% %application% %application_label% "%args%" "%errormessage%"
+set log_line=%start_time% %end_time% %Elapsed% %status% %error% %application% %application_label% %USERNAME% "%args%" "%errormessage%"
 
 echo %log_line%
 echo %log_line%>>%log_file%
 
-set message=%message% *_%application%_* start:`%aut_start_time%` end:`%aut_end_time%` elapsed:`%Elapsed%` *%COMPUTERNAME%* `%args:\=\\%` `%error%` _%errormessage%_
+set message=%message% *_%application%_* start:`%aut_start_time%` end:`%aut_end_time%` elapsed:`%Elapsed%`user:`%USERNAME%` *%COMPUTERNAME%* `%args:\=\\%` `%error%` _%errormessage%_
 
 goto :post_slack
 goto :eof
