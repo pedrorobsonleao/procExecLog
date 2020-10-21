@@ -134,7 +134,7 @@ set log_line=127.0.0.1 - %USERNAME% [%aut_start_time%] "POST http://command/%app
 echo %log_line%
 echo %log_line% >> %log_file%
 
-set message=%message% *_%application%_* start:`%aut_start_time%` end:`%aut_end_time%` elapsed:`%Elapsed%` user:`%USERNAME%` *%COMPUTERNAME%* `%args:\=\\%` `%error%` _%errormessage%_
+set message=%message% start:`%aut_start_time%` end:`%aut_end_time%` elapsed:`%Elapsed%` user:`%USERNAME%` *%COMPUTERNAME%* *_%application%_* `%args:\=\\%` `%error%` _%errormessage%_
 
 goto :post_slack
 goto :eof
