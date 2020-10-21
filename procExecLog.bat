@@ -115,21 +115,26 @@ goto :eof
 :logger
 if %error% NEQ 0 (
 	set status=ERROR
+	set http_status=500
 	set message=%SLACK_ERROR%
 	EVENTCREATE /T ERROR /L APPLICATION /ID 100 /D "command:[%args%] logfile:[%error_file%] error:[%errormessage%]" > NUL 2>&1
 ) else (
 	set status=SUCCESS
+	set http_status=200
 	set message=%SLACK_SUCCESS%
 )
 
-set log_file=%logdir%\%application%-%datef%.log
+set log_file=%logdir%\access-%datef%.log
 
-set log_line=%start_time% %end_time% %Elapsed% %status% %error% %application% %application_label% %USERNAME% "%args%" "%errormessage%"
+REM set log_line=%start_time% %end_time% %Elapsed% %status% %error% %application% %application_label% %USERNAME% "%args%" "%errormessage%"
+
+call :Elapsed_seconds
+set log_line=127.0.0.1 - %USERNAME% [%aut_start_time%] "POST http://command/%application% HTTP/1.1" %http_status% %Elapsed_seconds% cmd=%args: =+% - %Elapsed_seconds% "-" "%aut_end_time% %Elapsed% %status% %error% %application_label% [%args%] [%errormessage%]"
 
 echo %log_line%
-echo %log_line%>>%log_file%
+echo %log_line% >> %log_file%
 
-set message=%message% *_%application%_* start:`%aut_start_time%` end:`%aut_end_time%` elapsed:`%Elapsed%`user:`%USERNAME%` *%COMPUTERNAME%* `%args:\=\\%` `%error%` _%errormessage%_
+set message=%message% *_%application%_* start:`%aut_start_time%` end:`%aut_end_time%` elapsed:`%Elapsed%` user:`%USERNAME%` *%COMPUTERNAME%* `%args:\=\\%` `%error%` _%errormessage%_
 
 goto :post_slack
 goto :eof
@@ -162,4 +167,14 @@ goto :eof
 :: usage
 :usage
 echo Use: %program% [slack label] [command and parameters]
+goto :eof
+
+:: Elapsed_seconds
+:Elapsed_seconds
+
+set h=%Elapsed:~0,2%
+set m=%Elapsed:~3,2%
+set s=%Elapsed:~6,2%
+
+set /A Elapsed_seconds=(s+(m*60)+(h*(60*60)))*1000
 goto :eof

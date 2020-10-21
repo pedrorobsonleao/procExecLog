@@ -45,3 +45,13 @@ To sent slack message you need:
 ## task scheduler config sample
 
 ![task scheduler](./img/TaskScheduler.png)
+
+## goaccess report
+
+![goaccess](./img/goaccess.png)
+
+The log is write with a Common Log Format. Is possible make report with [GoAccess](https://goaccess.io)!
+
+### how to process log
+
+`cat access.log | goaccess --date-format='%d/%m/%Y' --time-format='%H:%M:%S' --log-format='%h %^ %e [%d %t,%^] "%m %U %H" %s %b %q %^ %L %^' >out.html`
