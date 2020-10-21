@@ -11,7 +11,7 @@ C:\>c:\Projects\procExecLog\procExecLog.bat "My Description" dir /s /r c:\
 
 To full traceability the scrip write log information in this channels:
 
-* log file. `\procExecLog\log\dir-20201018.log`
+* log file. `\procExecLog\log\access-20201018.log`
 * slack. See session slack config.
 * event viewer. Need user permission to write event viewer errors.
 
