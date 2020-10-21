@@ -3,8 +3,8 @@ Run your dos/windows proccess with full traceability
 
 ## how to run
 ```
-c:\> \procExecLog\procExecLog.bat "My Description" dir /s /r c:\
-20201018 220309 20201018 220706 SUCCESS 0 dir "My Description" "dir /s /r c:\" ""
+C:\>c:\Projects\procExecLog\procExecLog.bat "My Description" dir /s /r c:\
+127.0.0.1 - U001009 [20/10/2020 22:46:09,59] "POST http://command/dir HTTP/1.1" 200 255000 cmd=dir+/s+/r+c:\ - 255000 "-" "20/10/2020 22:50:24,67 00:04:15,08 SUCCESS 0 "My Description" [dir /s /r c:\] []"
 ```
 
 ## traceability
